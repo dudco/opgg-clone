@@ -11,6 +11,7 @@ const MyGlobalStyle = createGlobalStyle`
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: rgba(0, 0, 0, .1);
   }
 
   code {
