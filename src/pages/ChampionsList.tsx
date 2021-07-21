@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import styled from "styled-components";
+import classnames from "classnames";
 import Champion from "../components/Champion";
 import ChampionModel from "../models/ChampionModel";
 
@@ -9,7 +10,9 @@ interface ChampionListProps {
 }
 
 interface ChampionListState {
-    champions: ChampionModel[]
+    allChampions: ChampionModel[];
+    champions: ChampionModel[];
+    type: string;
 }
 
 const ChampionListPageWrapper = styled.div`
@@ -25,13 +28,15 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
         super(props);
 
         this.state = {
+            allChampions: [],
             champions: [],
+            type: "ALL",
         }
     }
 
     async componentDidMount() {
         const response = await axios.get("http://opgg.dudco.kr/champion");
-        const champions = response.data.map((data: any) => 
+        const allChampions = response.data.map((data: any) => 
             new ChampionModel({
                 id: data.id,
                 name: data.name,
@@ -39,7 +44,35 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
                 position: data.position
             })
         );
-        this.setState({champions});
+    
+        this.setState({
+            allChampions,
+            champions: allChampions,
+        });
+    }
+
+    onChangeType = (type: string) => () => {
+        this.setState({
+            type,
+            champions: this.filterChampions(type),
+        });
+    }
+    
+    filterChampions = (type: string) => {
+        switch (type) {
+            case "TOP":
+                return this.state.allChampions.filter(c => c.position!!.indexOf("탑") > -1);        
+            case "JUG":
+                return this.state.allChampions.filter(c => c.position!!.indexOf("정글") > -1);        
+            case "MID":
+                return this.state.allChampions.filter(c => c.position!!.indexOf("미드") > -1);        
+            case "ADC":
+                return this.state.allChampions.filter(c => c.position!!.indexOf("바텀") > -1);        
+            case "SUP":
+                return this.state.allChampions.filter(c => c.position!!.indexOf("서포터") > -1);        
+            default:
+                return this.state.allChampions;
+        }
     }
 
     render() {
@@ -48,12 +81,12 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
                 <ChampionsWrapper>
                     <div className="header">
                         <div className="item-wrap">
-                            <div className="item select">전체</div>
-                            <div className="item">탑</div>
-                            <div className="item">정글</div>
-                            <div className="item">미드</div>
-                            <div className="item">바텀</div>
-                            <div className="item">서포터</div>
+                            <div className={classnames("item", {select: this.state.type === "ALL"})} onClick={this.onChangeType("ALL")}>전체</div>
+                            <div className={classnames("item", {select: this.state.type === "TOP"})} onClick={this.onChangeType("TOP")}>탑</div>
+                            <div className={classnames("item", {select: this.state.type === "JUG"})} onClick={this.onChangeType("JUG")}>정글</div>
+                            <div className={classnames("item", {select: this.state.type === "MID"})} onClick={this.onChangeType("MID")}>미드</div>
+                            <div className={classnames("item", {select: this.state.type === "ADC"})} onClick={this.onChangeType("ADC")}>바텀</div>
+                            <div className={classnames("item", {select: this.state.type === "SUP"})} onClick={this.onChangeType("SUP")}>서포터</div>
                         </div>
                         <input type="text" placeholder="챔피언 검색 (가렌, ㄱㄹ, ...)"/>
                     </div>
