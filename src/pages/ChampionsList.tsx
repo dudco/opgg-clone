@@ -1,5 +1,16 @@
+import axios from "axios";
 import React from "react";
 import styled from "styled-components";
+import Champion from "../components/Champion";
+import ChampionModel from "../models/ChampionModel";
+
+interface ChampionListProps {
+
+}
+
+interface ChampionListState {
+    champions: ChampionModel[]
+}
 
 const ChampionListPageWrapper = styled.div`
     display: flex;
@@ -9,7 +20,28 @@ const ChampionListPageWrapper = styled.div`
 `
 
 // List of champion page
-export default class ChampionsList extends React.Component {
+export default class ChampionsList extends React.Component<ChampionListProps, ChampionListState> {
+    constructor(props: ChampionListProps) {
+        super(props);
+
+        this.state = {
+            champions: [],
+        }
+    }
+
+    async componentDidMount() {
+        const response = await axios.get("http://opgg.dudco.kr/champion");
+        const champions = response.data.map((data: any) => 
+            new ChampionModel({
+                id: data.id,
+                name: data.name,
+                key: data.key,
+                position: data.position
+            })
+        );
+        this.setState({champions});
+    }
+
     render() {
         return (
             <ChampionListPageWrapper>
@@ -25,7 +57,19 @@ export default class ChampionsList extends React.Component {
                         </div>
                         <input type="text" placeholder="챔피언 검색 (가렌, ㄱㄹ, ...)"/>
                     </div>
-                    <div className="list"></div>
+                    <div className="list">
+                        {
+                            this.state.champions.map((data) => 
+                                <Champion 
+                                    key={data.id}
+                                    id={Number(data.id) || 0}
+                                    position={data.position || []}
+                                    name = {data.name || ""}
+                                />
+                            )
+                        }
+                        {[1, 2, 3, 4, 5, 6].map(() => <div style={{width: "82px", height: 0}}/>)}
+                    </div>
                 </ChampionsWrapper>
                 <ChampionTrendWrapper>
                     trends
@@ -36,7 +80,6 @@ export default class ChampionsList extends React.Component {
 }
 
 const ChampionsWrapper = styled.div`
-    flex: 2;
     background-color: white;
     border-right: 1px solid #e9eff4;
     & > .header {
@@ -72,8 +115,12 @@ const ChampionsWrapper = styled.div`
     }
 
     & > .list {
-        height: 100vh;
+        width: 564px;
         background-color: #f7f7f7;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 0 30px;
     }
 `
 
