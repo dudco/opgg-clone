@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import styled from "styled-components";
 import classnames from "classnames";
 import Champion from "../components/Champion";
@@ -13,6 +13,7 @@ interface ChampionListState {
     allChampions: ChampionModel[];
     champions: ChampionModel[];
     type: string;
+    search: string;
 }
 
 const ChampionListPageWrapper = styled.div`
@@ -31,6 +32,7 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
             allChampions: [],
             champions: [],
             type: "ALL",
+            search: "",
         }
     }
 
@@ -55,6 +57,7 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
         this.setState({
             type,
             champions: this.filterChampions(type),
+            search: "",
         });
     }
     
@@ -75,6 +78,17 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
         }
     }
 
+    onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if(value != "") {
+            const searchChamp = this.filterChampions(this.state.type).filter(champ => champ.name?.includes(value) );
+            this.setState({champions: searchChamp, search: value});
+        } else {
+            const champions = this.filterChampions(this.state.type);
+            this.setState({champions, search: value})
+        }
+    }
+
     render() {
         return (
             <ChampionListPageWrapper>
@@ -88,7 +102,7 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
                             <div className={classnames("item", {select: this.state.type === "ADC"})} onClick={this.onChangeType("ADC")}>바텀</div>
                             <div className={classnames("item", {select: this.state.type === "SUP"})} onClick={this.onChangeType("SUP")}>서포터</div>
                         </div>
-                        <input type="text" placeholder="챔피언 검색 (가렌, ㄱㄹ, ...)"/>
+                        <input type="text" placeholder="챔피언 검색 (가렌, ㄱㄹ, ...)" onChange={this.onChangeSearch} value={this.state.search}/>
                     </div>
                     <div className="list">
                         {
