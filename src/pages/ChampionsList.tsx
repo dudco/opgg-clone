@@ -4,6 +4,7 @@ import styled from "styled-components";
 import classnames from "classnames";
 import Champion from "../components/Champion";
 import ChampionModel from "../models/ChampionModel";
+import championTier from "../assets/icon-champion-p.png";
 
 interface ChampionListProps {
 
@@ -119,7 +120,21 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
                     </div>
                 </ChampionsWrapper>
                 <ChampionTrendWrapper>
-                    trends
+                    <div className="header">
+                        <div>챔피언 순위</div>
+                        <div className="item-wrap">
+                            <div className="item select">
+                                <img src={championTier}/>
+                                티어
+                            </div>
+                            <div className="item">승률</div>
+                            <div className="item">픽률</div>
+                            <div className="item">밴률</div>
+                        </div>
+                    </div>
+                    <div className="list">
+
+                    </div>
                 </ChampionTrendWrapper>
             </ChampionListPageWrapper>
         )
@@ -174,4 +189,56 @@ const ChampionsWrapper = styled.div`
 const ChampionTrendWrapper = styled.div`
     flex: 1;
     background-color: white;
+
+    & > div.header {
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+        border-bottom: 1px solid #e9eff4;
+
+        font-weight: bold;
+        font-size: 14px;
+        padding: 0 20px;
+
+        & > .item-wrap {
+            display: flex;
+            color: rgba(0,0,0,.6);
+
+            & > .item {
+                display: flex;
+                align-items: center;
+                position: relative;
+                line-height: 60px;
+                margin: 0 10px;
+                padding: 0 5px;
+                cursor: pointer;
+            }
+
+            & > .item > img {
+                height: 17px;
+                margin-right: 5px;
+            }
+
+            & > .item:not(:last-child)::after {
+                content: "";
+                width: 1px;
+                height: 20px;
+                background-color: #eee;
+                position: absolute;
+                right: -10px;
+                top: 50%;
+                margin-top: -10px;
+            }
+
+            & > .item.select {
+                color: #5383e8;
+                box-shadow: 0px -3px 0px 0px #5383e8 inset;
+            }
+        }
+    }
+
+    & > div.list {
+        height: 100vh;
+        background-color: #f7f7f7;
+    }
 `
