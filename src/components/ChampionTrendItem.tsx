@@ -2,11 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import ChampionTrendHeader from "./ChampionTrendHeader";
 import classnames from "classnames";
-
 import tierStay from "../assets/icon-championtier-stay.png"
 import tierUp from "../assets/icon-championtier-up.png"
 import tierDown from "../assets/icon-championtier-down.png"
-
 import champion32 from "../assets/champion32.png";
 
 
@@ -22,8 +20,13 @@ interface ChampionTrendItemProps {
 }
 
 
-const ChampionTrendItermWrapper = styled(ChampionTrendHeader)<{champID: number}>`
+const ChampionTrendItermWrapper = styled(ChampionTrendHeader)`
     background-color: white;
+    border: 1px solid #e9eff4;
+
+    &:not(:last-child) {
+        border-bottom: none;
+    }
 
     & > .rank {
         font-style: italic;
@@ -40,6 +43,8 @@ const ChampionTrendItermWrapper = styled(ChampionTrendHeader)<{champID: number}>
             font-size: 14px;
             line-height: 14px;
             padding: 0 10px;
+            width: 40px;
+            box-sizing: border-box;
 
             & > img {
                 margin-right: 2px;
@@ -57,7 +62,6 @@ const ChampionTrendItermWrapper = styled(ChampionTrendHeader)<{champID: number}>
             width: 32px;
             height: 32px;
             background-image: url(${champion32});
-            background-position: 0 -${props => props.champID * 32}px;
         }
         & > .champ-desc {
             font-size: 12px;
@@ -87,14 +91,14 @@ const ChampionTrendItem: React.FC<ChampionTrendItemProps> = (props) => {
     }
 
     return (
-        <ChampionTrendItermWrapper champID={props.championID}>
+        <ChampionTrendItermWrapper>
             <div className="rank">{props.rank}</div>
             <div className="champ">
                 <div className={classnames("change", {up: props.change > 0, down: props.change < 0})}>
                     <img src={getTierChangeIcon()} alt="" /> 
                     {Math.abs(props.change)}
                 </div>
-                <div className="champ-img"/>
+                <div className={`champ-img __spc32-${props.championID}`}/>
                 <div className="champ-desc">
                     <div>{props.name}</div>
                     <div>{props.position}</div>

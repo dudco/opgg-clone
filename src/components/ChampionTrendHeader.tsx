@@ -18,7 +18,8 @@ const ChampionTrendHeader = styled.div`
 
         font-size: 12px;
         &:nth-child(1) {
-            flex: 0.1;
+            flex: 0.5;
+            text-align: center;
         }
 
         &:nth-child(2) {

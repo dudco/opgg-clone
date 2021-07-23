@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import championImage from "../assets/champions.png";
 
-const ChampionWrapper = styled.div<{chmpionId: number}>`
+const ChampionWrapper = styled.div`
     margin-top: 16px;
 
     & > div:first-child {
@@ -19,7 +19,6 @@ const ChampionWrapper = styled.div<{chmpionId: number}>`
             bottom: 0;
 
             background-image: url(${championImage});
-            background-position: 0 -${(props) => props.chmpionId * 82}px;
         }
 
         & > div.position {
@@ -56,9 +55,9 @@ interface ChampionProps {
 
 const Champion: React.FC<ChampionProps> = (props) => {
     return (
-        <ChampionWrapper chmpionId={props.id}>
+        <ChampionWrapper>
             <div>
-                <div className="image"></div>
+                <div className={`image __spc82-${props.id}`}></div>
                 <div className="position">
                     {props.position.map(p => {
                         return (
