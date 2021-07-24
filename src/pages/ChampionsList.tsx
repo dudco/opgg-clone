@@ -23,6 +23,7 @@ interface ChampionListState {
 
     trendChampions: ChampionTrendModel[];
     trendType: string;
+    trendPosition: string;
 }
 
 const ChampionListPageWrapper = styled.div`
@@ -45,6 +46,7 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
 
             trendChampions: [],
             trendType: "tier", // winratio, pickratio, banratio
+            trendPosition: "top",
         }
     }
 
@@ -128,7 +130,12 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
 
     onClickTrendType = (type: string) => async () => {
         const trendChampions = await this.getTrendList(type);
-        this.setState({trendType: type, trendChampions});
+        this.setState({trendType: type, trendChampions, trendPosition: type === "tier" ? "top" : "all"});
+    }
+
+    onClickTrendPosition = (position: string) => async () => {
+        const trendChampions = await this.getTrendList(this.state.trendType, position);
+        this.setState({trendChampions, trendPosition: position});
     }
 
     render() {
@@ -193,12 +200,12 @@ export default class ChampionsList extends React.Component<ChampionListProps, Ch
                     </div>
                     <div className="list">
                         <ChampionTrendToolbar>
-                            <div hidden={true}>전체</div>
-                            <div className="select">탑</div>
-                            <div>정글</div>
-                            <div>미드</div>
-                            <div>바텀</div>
-                            <div>서포터</div>
+                            <div className={classnames({select: this.state.trendPosition === "all"})}  onClick={this.onClickTrendPosition("all")} hidden={this.state.trendType === "tier"}>전체</div>
+                            <div className={classnames({select: this.state.trendPosition === "top"})} onClick={this.onClickTrendPosition("top")}>탑</div>
+                            <div className={classnames({select: this.state.trendPosition === "jungle"})} onClick={this.onClickTrendPosition("jungle")}>정글</div>
+                            <div className={classnames({select: this.state.trendPosition === "mid"})} onClick={this.onClickTrendPosition("mid")}>미드</div>
+                            <div className={classnames({select: this.state.trendPosition === "adc"})} onClick={this.onClickTrendPosition("adc")}>바텀</div>
+                            <div className={classnames({select: this.state.trendPosition === "support"})} onClick={this.onClickTrendPosition("support")}>서포터</div>
                         </ChampionTrendToolbar>
                         <ChampionTrendHeader>
                             <div>#</div>
