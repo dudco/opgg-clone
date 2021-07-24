@@ -112,7 +112,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                     </div>
                 </HeaderInput>
             </div>
-            <div>해당 사이트는 교육을 위해 클론코딩 된 것 입니다.</div>
+            <div>Test.</div>
         </HeaderWrapper>
     );
 }
